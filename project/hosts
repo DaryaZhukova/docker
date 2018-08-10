@@ -1,0 +1,5 @@
+127.0.0.1 localhost nginx
+123.45.7.4 nginx
+123.45.7.2 jenkins
+123.45.7.3 nexus
+

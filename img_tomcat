@@ -1,0 +1,11 @@
+FROM maven:3.3-jdk-8 as builder
+COPY . /build/
+RUN ls -la /build/
+WORKDIR /build/p323line/helloworld-ws/
+RUN mvn clean install  
+FROM openjdk:8-jre
+RUN wget http://ftp.byfly.by/pub/apache.org/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.zip && unzip apache-tomcat-8.5.32.zip -d /opt
+RUN chmod -R 777 /opt/apache-tomcat-8.5.32/
+COPY --from=builder /build/p323line/helloworld-ws/target/helloworld-ws.war /opt/apache-tomcat-8.5.31/webapps/
+EXPOSE 8080
+ENTRYPOINT ["/opt/apache-tomcat-8.5.32/bin/catalina.sh", "run"]

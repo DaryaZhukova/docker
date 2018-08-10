@@ -1,0 +1,30 @@
+version: "3.6"
+services:
+  swarm_jenkins:
+    image: jenkins/jenkins
+    container_name: swarm_jenkins
+    ports:
+      - 8080:8080
+    networks:
+      dzhukova_net:
+        ipv4_address: 123.45.7.13
+    deploy:
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    container_name: nginx
+    volumes:
+      - ./server.conf:/etc/nginx/conf.d/server.conf
+    networks:
+      dzhukova_net:
+        ipv4_address: 123.45.7.14
+    deploy:
+networks:
+  dzhukova_net:
+    driver: overlay
+    ipam:
+      driver: default
+      config:
+        - subnet: 123.45.7.0/24
+

@@ -1,0 +1,59 @@
+version: "2.3"
+services:
+  jenkins:
+    image: jenkins/jenkins
+    container_name: jenkins
+    ports:
+      - 8080:8080
+    volumes:
+      - jenkins_storage:/var/jenkins_home
+    networks:
+      dzhukova_net:
+        ipv4_address: 123.45.7.2
+    logging:
+      driver: journald
+      options:
+        tag: jenkins
+    cpu_quota: 35000    
+    mem_limit: 500m
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    volumes:
+      - nexus_storage:/nexus-data
+    ports:
+      - 8081:8081
+    networks:
+      dzhukova_net:
+        ipv4_address: 123.45.7.3
+    logging:
+      driver: journald
+      options:
+        tag: nexus
+    cpu_quota: 25000
+    mem_limit: 1024m
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    container_name: nginx
+    volumes:
+      - ./server.conf:/etc/nginx/conf.d/server.conf
+      - ./hosts:/etc/hosts
+    networks:
+      dzhukova_net:
+        ipv4_address: 123.45.7.4
+    logging:
+      driver: journald
+      options:
+        tag: nginx
+volumes:
+  jenkins_storage:
+  nexus_storage:
+networks:
+  dzhukova_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 123.45.7.0/24

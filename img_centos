@@ -1,0 +1,7 @@
+FROM centos
+LABEL maintainer="Darya Zhukova"
+RUN yum -y install epel-release && \
+    yum -y install nginx git logrotate && \
+    yum clean all
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
